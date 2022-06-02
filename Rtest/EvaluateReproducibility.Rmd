@@ -1,0 +1,96 @@
+---
+title: "Evaluate Reproducibility"
+author: "Rob Carnell"
+date: "5/31/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(foreign)
+require(assertthat)
+```
+
+## Modifications and Order of operations
+
+1. Change the Stata working directory to `/scripts`
+2. Run `/scripts/surname_creation_lower.do`
+    - Changed output file name to be compared to original
+    - Creates `/input_files/created/census_surnames_lower_check.dta`
+3. Run `/scripts/create_attr_over18_all_geo_entities.do`
+    - Changed output file name to be compared to the original
+    - Creates
+        - `/input_files/created/blkgrp_attr_over18_check.dta`
+        - `/input_files/created/tract_attr_over18_check.dta`
+        - `/input_files/created/zip_attr_over18_check.dta`
+4. Create output directory
+5. Run `/scripts/create_test_data.do`
+    - Changed output file for consistency
+    - Creates `../output/fictitious_sample_data_check.dta`
+6. Edit `/scripts/combine_probs.do`
+    - Change output file and the Stata version to 12
+    - Creates `test_proxied_final.dta`
+7. Run `/scripts/main_test_data.do`
+    - Changed file name from `fictitious_sample_data` to `fictitious_sample_data_check`
+    in multiple places
+    
+## File Comparisons
+
+```{r}
+created_dir <- file.path("..", "input_files", "created")
+standard <- foreign::read.dta(file.path(created_dir, "census_surnames_lower.dta"))
+repro <- foreign::read.dta(file.path(created_dir, "census_surnames_lower_check.dta"))
+assertthat::assert_that(nrow(repro) == 167409)
+
+standard2 <- foreign::read.dta(file.path(created_dir, "blkgrp_attr_over18.dta"))
+repro2 <- foreign::read.dta(file.path(created_dir, "blkgrp_attr_over18_check.dta"))
+assertthat::assert_that(all(standard2$GeoInd == repro2$GeoInd))
+assertthat::assert_that(all(abs(standard2$geo_pr_white[!is.na(standard2$geo_pr_white)] - repro2$geo_pr_white[!is.na(repro2$geo_pr_white)]) < 1E-6))
+
+standard3 <- foreign::read.dta(file.path(created_dir, "tract_attr_over18.dta"))
+repro3 <- foreign::read.dta(file.path(created_dir, "tract_attr_over18_check.dta"))
+assertthat::assert_that(all(standard3$GeoInd == repro3$GeoInd))
+assertthat::assert_that(all(abs(standard3$geo_pr_white[!is.na(standard3$geo_pr_white)] - repro3$geo_pr_white[!is.na(repro3$geo_pr_white)]) < 1E-6))
+
+standard4 <- foreign::read.dta(file.path(created_dir, "zip_attr_over18.dta"))
+repro4 <- foreign::read.dta(file.path(created_dir, "zip_attr_over18_check.dta"))
+assertthat::assert_that(all(standard4$GeoInd == repro4$GeoInd))
+assertthat::assert_that(all(abs(standard4$geo_pr_white[!is.na(standard4$geo_pr_white)] - repro4$geo_pr_white[!is.na(repro4$geo_pr_white)]) < 1E-6))
+```
+
+- `census_surnames_lower.dta`
+    - Repository File:  `r dim(standard)`
+    - Reproduction: `r dim(repro)`
+        - According the project README, 167,409 entries were expected.  The repository file was not updated
+        when the 2017 update was released.  Two columns were also added in the 2017 update.
+- `blkgrp_attr_over18.dta`
+    - Repository File:  `r dim(standard2)`
+    - Reproduction: `r dim(repro2)`
+- `tract_attr_over18.dta`
+    - Repository File:  `r dim(standard3)`
+    - Reproduction: `r dim(repro3)`
+- `zip_attr_over18.dta`
+    - Repository File:  `r dim(standard4)`
+    - Reproduction: `r dim(repro4)`
+
+```{r}
+rm(standard, repro, standard2, repro2, standard3, repro3,
+   standard4, repro4)
+```
+
+```{r}
+output_dir <- file.path("..", "output")
+repro <- foreign::read.dta(file.path(output_dir, "test_proxied_final.dta"))
+standard <- read.csv(file.path("..", "test_output", "test_proxied_final.csv"))
+assertthat::assert_that(all(abs(standard$pr_white - repro$pr_white) < 1E-6))
+assertthat::assert_that(all(abs(standard$name_pr_black - repro$name_pr_black) < 1E-6))
+fict <- foreign::read.dta(file.path(output_dir, "fictitious_sample_data_check.dta"))
+assertthat::assert_that(all(fict$geo_code_precision == standard$geo_code_precision))
+```
+
+## R project validation
+
+Now to validate the R project, we need to be able to produce the same artifacts.
+
+
+

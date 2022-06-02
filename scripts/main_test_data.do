@@ -34,23 +34,23 @@ do "create_attr_over18_all_geo_entities.do"
 * See script for details on arguments that need to be supplied to the program.
 do "surname_parser.do"
 * Execute name_parse.
-name_parse, matchvars(rownum) app_lname(name1) coapp_lname(name2) maindir(`outdir') readdir(`sourcedir') readfile(fictitious_sample_data) censusdir(`censusdata') keepvars()
+name_parse, matchvars(rownum) app_lname(name1) coapp_lname(name2) maindir(`outdir') readdir(`sourcedir') readfile(fictitious_sample_data_check) censusdir(`censusdata') keepvars()
 
 * Read in the file (for each level of geography) that defines the program "geo_parse" that merges the precalculated geographic 
 * and name probabilities and generates the Bayesian probability and run program.
 * See script for details on arguments that need to be supplied to the program.
 do "geo_name_merger_all_entities_over18.do"
 * Execute geo_parse to construct block group, tract, and ZIP code based BISG probabilities.
-geo_parse, matchvars(rownum) maindir(`outdir') readdir(`sourcedir') readfile(fictitious_sample_data) geodir(`sourcedir') geofile(fictitious_sample_data) inst_name(test) censusdir(`censusdata') geo_ind_name(GEOID10_BlkGrp) geo_switch(blkgrp)
-geo_parse, matchvars(rownum) maindir(`outdir') readdir(`sourcedir') readfile(fictitious_sample_data) geodir(`sourcedir') geofile(fictitious_sample_data) inst_name(test) censusdir(`censusdata') geo_ind_name(GEOID10_Tract) geo_switch(tract)
-geo_parse, matchvars(rownum) maindir(`outdir') readdir(`sourcedir') readfile(fictitious_sample_data) geodir(`sourcedir') geofile(fictitious_sample_data) inst_name(test) censusdir(`censusdata') geo_ind_name(ZCTA5) geo_switch(zip)
+geo_parse, matchvars(rownum) maindir(`outdir') readdir(`sourcedir') readfile(fictitious_sample_data_check) geodir(`sourcedir') geofile(fictitious_sample_data_check) inst_name(test) censusdir(`censusdata') geo_ind_name(GEOID10_BlkGrp) geo_switch(blkgrp)
+geo_parse, matchvars(rownum) maindir(`outdir') readdir(`sourcedir') readfile(fictitious_sample_data_check) geodir(`sourcedir') geofile(fictitious_sample_data_check) inst_name(test) censusdir(`censusdata') geo_ind_name(GEOID10_Tract) geo_switch(tract)
+geo_parse, matchvars(rownum) maindir(`outdir') readdir(`sourcedir') readfile(fictitious_sample_data_check) geodir(`sourcedir') geofile(fictitious_sample_data_check) inst_name(test) censusdir(`censusdata') geo_ind_name(ZCTA5) geo_switch(zip)
 
 * Read in file that defines the program "combine_probs" that merges together the block group, tract, and zip based BISG proxies and 
 * chooses the most precise proxy given the precision of geocoding.
 * See script for details on arguments that need to be supplied to the function.
 do "combine_probs.do"
 * Execute combine_bisg.
-combine_bisg, matchvars(rownum) maindir(`outdir') geodir(`sourcedir') geofile(fictitious_sample_data) geoprecvar(geo_code_precision) inst_name(test)
+combine_bisg, matchvars(rownum) maindir(`outdir') geodir(`sourcedir') geofile(fictitious_sample_data_check) geoprecvar(geo_code_precision) inst_name(test)
 
 
 

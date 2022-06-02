@@ -52,7 +52,8 @@ replace pct`k' = remaining / (countmiss * count) if pct`k' == .
 
 replace name = lower(name)
 
-save "../input_files/created/census_surnames_lower.dta", replace
+* save from version 13 to version 12 so it can be read into R using foreign
+saveold "../input_files/created/census_surnames_lower_check.dta", replace
 
 exit
 

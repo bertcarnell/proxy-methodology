@@ -97,7 +97,7 @@ assert check_pr >= 0.99 & check_pr <= 1.01 if pr_precision > 1
 drop check_pr sum_*
 
 order `matchvars' `geoprecvar' pr_* blkgrp18_pr_* tract18_pr_* zip18_pr_* blkgrp18_geo_pr_* tract18_geo_pr_* zip18_geo_pr_* name_pr*
-save  "`maindir'/`inst_name'_proxied_final.dta",replace   
+saveold  "`maindir'/`inst_name'_proxied_final.dta", replace   
  
 end
 

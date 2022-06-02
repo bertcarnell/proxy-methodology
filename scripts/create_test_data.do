@@ -111,7 +111,8 @@ destring GEOID10_Tract GEOID10_BlkGrp ZCTA5, replace
 keep rownum name1 name2 GEOID10_Tract GEOID10_BlkGrp ZCTA5 geo_code_precision 
 order rownum name1 name2 GEOID10_Tract GEOID10_BlkGrp ZCTA5 geo_code_precision 
 
-save "../output/fictitious_sample_data", replace
+* Save from Stata 13 to Stata 12 version
+saveold "../output/fictitious_sample_data_check", replace
 
 * END
 

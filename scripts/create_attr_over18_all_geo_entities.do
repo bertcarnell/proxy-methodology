@@ -104,7 +104,8 @@ foreach file in `geo_files'{
 
     keep GeoInd geo_pr* here*
     compress
-    save "`outdir'`file'_attr_over18.dta", replace
+	* Save from Stata 13 format to Stata 12
+    saveold "`outdir'`file'_attr_over18_check.dta", replace
 }
 
 exit

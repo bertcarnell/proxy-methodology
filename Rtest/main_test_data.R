@@ -24,15 +24,24 @@ censusdata <- file.path("input_files", "created")
 
 # * Run the script that prepares the analysis version of the census surname list,
 # * including the proportions of individuals by race and ethnicity by surname.
-do "surname_creation_lower.do"
+# do "surname_creation_lower.do"
+source(file.path("Rtest", "surname_creation_lower.R"))
+surname_creation_lower()
 
-* Run the script that prepares the analysis version of the census geography data files.
-do "create_attr_over18_all_geo_entities.do"
+# * Run the script that prepares the analysis version of the census geography data files.
+# do "create_attr_over18_all_geo_entities.do"
+source(file.path("Rtest", "create_attr_over18_all_geo_entities.R"))
+create_attr_over18_all_geo_entities()
 
-* Read in the file that defines the program "name_parse" that contains the name standardization routines and merges surname probabilities
-* from the census surname list.
-* See script for details on arguments that need to be supplied to the program.
-do "surname_parser.do"
+source(file.path("Rtest", "create_test_data.R"))
+create_test_data()
+
+# * Read in the file that defines the program "name_parse" that contains the name standardization routines and merges surname probabilities
+# * from the census surname list.
+# * See script for details on arguments that need to be supplied to the program.
+# do "surname_parser.do"
+source(file.path("Rtest", "surname_parser.R"))
+
 * Execute name_parse.
 name_parse, matchvars(rownum) app_lname(name1) coapp_lname(name2) maindir(`outdir') readdir(`sourcedir') readfile(fictitious_sample_data) censusdir(`censusdata') keepvars()
 
