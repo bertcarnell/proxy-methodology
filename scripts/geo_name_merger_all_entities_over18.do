@@ -28,7 +28,7 @@ foreach file in `geo_switch'{
 
     merge 1:1 `matchvars' using "`readdir'/`readfile'.dta", keep(match using) update replace nogen
 
-    save "`maindir'/`inst_name'_proxied.dta", replace
+    saveold "`maindir'/`inst_name'_proxied.dta", replace
 
     use "`censusdir'/`file'_attr_over18.dta", clear
 
@@ -100,7 +100,7 @@ di in ye "End assertions"
     
     keep `matchvars' `geo_switch'18_* name_pr*
     
-    save "`maindir'/`inst_name'_proxied_`geo_switch'18.dta", replace
+    saveold "`maindir'/`inst_name'_proxied_`geo_switch'18.dta", replace
     
 * Remove intermediate files.
     erase "`maindir'/`inst_name'_proxied.dta"

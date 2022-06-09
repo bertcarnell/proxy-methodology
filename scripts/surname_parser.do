@@ -38,7 +38,7 @@ rename `coapp_lname' lname
 
 * Generating an applicant/coapplicant indicator for ease of identification post-merge.
 gen appl_coapp_cd_enum = "C"
-save "`maindir'/coapps.dta", replace
+saveold "`maindir'/coapps.dta", replace
 
 use "`readdir'/`readfile'.dta", clear
 keep `matchvars' `app_lname' `keepvars'
@@ -251,7 +251,7 @@ timer on 1
 
 drop namematch* a_* c_*
 rename appid `matchvars'
-save "`maindir'/proxy_name.dta", replace
+saveold "`maindir'/proxy_name.dta", replace
 
 * Remove intermediate files.
 erase "`maindir'/coapps.dta"
