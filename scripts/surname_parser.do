@@ -140,7 +140,7 @@ timer on 1
 
 forvalues i = 1/2{
     rename lname`i' name
-    merge m:1 name using "`censusdir'/census_surnames_lower", keep(match master) keepusing(pctwhite pctblack pctapi pctaian pcthispanic pct2prace)
+    merge m:1 name using "`censusdir'/census_surnames_lower_check", keep(match master) keepusing(pctwhite pctblack pctapi pctaian pcthispanic pct2prace)
     drop _merge
     rename name lname`i'
 
@@ -150,7 +150,7 @@ forvalues i = 1/2{
 }
 
 compress
-save "`maindir'/race_probs_by_person.dta", replace
+saveold "`maindir'/race_probs_by_person.dta", replace
 
 timer off 1
 noisily di "5. Matched race probabilities in"
@@ -174,7 +174,7 @@ foreach z in `keepvars' {
 }
 
 compress
-save "`maindir'/coapps2.dta", replace
+saveold "`maindir'/coapps2.dta", replace
 
 use "`maindir'/race_probs_by_person.dta", clear
 
